@@ -2,2047 +2,637 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
-
-  <title>大腸癌術後サポートアプリ</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>大腸癌術後 排便サポートアプリ v0.2</title>
   <style>
     :root {
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        "Hiragino Kaku Gothic ProN",
-        "Yu Gothic",
-        sans-serif;
-
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+        "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
       color: #1f2937;
-      background-color: #f3f6f8;
+      background: #f3f6f8;
     }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      background-color: #f3f6f8;
-    }
-
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f3f6f8; }
     header {
-      background-color: #155e75;
+      background: #155e75;
       color: white;
-      padding: 24px 20px;
+      padding: 22px 20px;
     }
-
-    header h1 {
-      margin: 0 0 6px;
-      font-size: 28px;
-    }
-
-    header p {
-      margin: 0;
-      opacity: 0.9;
-    }
-
+    header h1 { margin: 0 0 6px; font-size: 28px; }
+    header p { margin: 0; opacity: .92; }
     main {
-      width: min(1100px, calc(100% - 32px));
-      margin: 24px auto;
+      width: min(1040px, calc(100% - 28px));
+      margin: 22px auto;
     }
-
     .notice {
-      padding: 16px;
-      margin-bottom: 20px;
+      padding: 14px 16px;
+      margin-bottom: 18px;
       border-left: 6px solid #f59e0b;
       border-radius: 10px;
-      background-color: #fffbeb;
+      background: #fffbeb;
     }
-
     .tabs {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
       margin-bottom: 18px;
     }
-
     .tab-button {
       width: auto;
-      padding: 10px 18px;
-      border: none;
+      border: 0;
       border-radius: 8px;
-      background-color: #e2e8f0;
-      color: #1f2937;
-      font-weight: bold;
+      background: #e2e8f0;
+      padding: 10px 16px;
+      font-weight: 700;
       cursor: pointer;
     }
-
-    .tab-button.active {
-      background-color: #155e75;
-      color: white;
-    }
-
-    .tab-panel {
-      display: none;
-    }
-
-    .tab-panel.active {
-      display: block;
-    }
-
-    .grid {
-      display: grid;
-      gap: 18px;
-    }
-
-    .grid-2 {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .grid-3 {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
+    .tab-button.active { background: #155e75; color: white; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .grid { display: grid; gap: 16px; }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .card {
-      margin-bottom: 18px;
-      padding: 20px;
+      background: white;
       border-radius: 14px;
-      background-color: white;
-      box-shadow: 0 3px 12px rgba(15, 23, 42, 0.07);
+      padding: 20px;
+      margin-bottom: 18px;
+      box-shadow: 0 3px 12px rgba(15, 23, 42, .07);
     }
-
-    .card h2 {
-      margin-top: 0;
-      color: #164e63;
-    }
-
+    .card h2, .card h3 { color: #164e63; margin-top: 0; }
     label {
       display: block;
-      margin-bottom: 14px;
+      margin-bottom: 13px;
       font-weight: 700;
     }
-
-    input,
-    select,
-    textarea,
-    button {
+    input, select, textarea, button {
       width: 100%;
       font: inherit;
     }
-
-    input,
-    select,
-    textarea {
+    input, select, textarea {
       margin-top: 6px;
-      padding: 10px 12px;
       border: 1px solid #cbd5e1;
       border-radius: 8px;
-      background-color: white;
+      padding: 10px 12px;
+      background: white;
     }
-
-    textarea {
-      resize: vertical;
-    }
-
+    textarea { resize: vertical; }
     button {
-      padding: 11px 16px;
-      border: none;
+      border: 0;
       border-radius: 8px;
-      font-weight: bold;
+      padding: 11px 16px;
+      font-weight: 700;
       cursor: pointer;
     }
-
-    .primary-button {
-      background-color: #0f766e;
-      color: white;
-    }
-
-    .secondary-button {
-      background-color: #e2e8f0;
-      color: #1f2937;
-    }
-
-    .danger-button {
-      background-color: white;
+    .primary { background: #0f766e; color: white; }
+    .secondary { background: #e2e8f0; color: #1f2937; }
+    .danger {
+      background: white;
       color: #b91c1c;
       border: 1px solid #dc2626;
     }
-
-    .small-button {
-      width: auto;
-      padding: 7px 12px;
-    }
-
+    .small { width: auto; padding: 7px 11px; }
     .postop-box {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 16px;
+      padding: 14px;
       border-radius: 10px;
-      background-color: #ecfeff;
+      background: #ecfeff;
     }
-
-    .postop-box strong {
-      font-size: 24px;
-      color: #155e75;
-    }
-
-    .symptom-list {
+    .postop-box strong { color: #155e75; font-size: 24px; }
+    .check-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-bottom: 20px;
+      gap: 10px;
+      margin-bottom: 16px;
     }
-
-    .symptom-item {
+    .check-item {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 12px;
+      gap: 9px;
       border: 1px solid #dbe5eb;
       border-radius: 10px;
+      padding: 11px;
       font-weight: 600;
     }
-
-    .symptom-item input {
-      width: auto;
-      margin: 0;
+    .check-item input { width: auto; margin: 0; }
+    .ai-card {
+      border-left: 8px solid #0f766e;
+      background: #f0fdfa;
     }
-
-    .hidden {
-      display: none;
-    }
-
-    .evaluation-card {
-      border-left: 8px solid #16a34a;
-    }
-
-    .evaluation-card.green {
-      border-left-color: #16a34a;
-    }
-
-    .evaluation-card.yellow {
-      border-left-color: #f59e0b;
-    }
-
-    .evaluation-card.red {
-      border-left-color: #dc2626;
-    }
-
-    .evaluation-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .severity-badge {
-      display: inline-block;
-      padding: 7px 14px;
-      border-radius: 999px;
-      color: white;
-      font-weight: bold;
-    }
-
-    .severity-badge.green {
-      background-color: #16a34a;
-    }
-
-    .severity-badge.yellow {
-      background-color: #d97706;
-    }
-
-    .severity-badge.red {
-      background-color: #dc2626;
-    }
-
-    .rule-item,
-    .record-item,
-    .surgery-item {
-      margin-top: 12px;
-      padding: 14px;
+    .summary-box {
+      background: #f8fafc;
       border: 1px solid #dbe5eb;
       border-radius: 10px;
+      padding: 14px;
+      white-space: pre-line;
     }
-
-    .rule-item h3,
-    .record-item h3,
-    .surgery-item h3 {
-      margin: 0 0 8px;
-    }
-
-    .item-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+    .record-item {
+      border: 1px solid #dbe5eb;
+      border-radius: 10px;
+      padding: 14px;
       margin-top: 12px;
     }
-
-    .muted {
-      color: #64748b;
-      font-size: 14px;
-    }
-
-    .disclaimer {
-      padding-top: 12px;
-      border-top: 1px solid #e2e8f0;
-      color: #64748b;
+    .record-item h3 { margin: 0 0 8px; }
+    .muted { color: #64748b; font-size: 14px; }
+    .tag {
+      display: inline-block;
+      margin: 3px 5px 3px 0;
+      padding: 4px 9px;
+      background: #e0f2fe;
+      border-radius: 999px;
       font-size: 13px;
     }
-
     .section-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
     }
-
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .button-row button { width: auto; }
+    .disclaimer {
+      padding-top: 12px;
+      margin-top: 14px;
+      border-top: 1px solid #cbd5e1;
+      color: #64748b;
+      font-size: 13px;
+    }
+    .hidden { display: none; }
     footer {
-      padding: 30px 20px;
       text-align: center;
       color: #64748b;
+      padding: 28px 20px;
     }
-
-    @media (max-width: 800px) {
-      .grid-2,
-      .grid-3,
-      .symptom-list {
-        grid-template-columns: 1fr;
-      }
-
-      header h1 {
-        font-size: 23px;
-      }
+    @media (max-width: 760px) {
+      .grid-2, .grid-3, .check-grid { grid-template-columns: 1fr; }
+      header h1 { font-size: 22px; }
     }
   </style>
 </head>
-
 <body>
   <header>
-    <h1>大腸癌術後サポートアプリ</h1>
-    <p>術式・術後時期・症状・対応を管理する試作版</p>
+    <h1>大腸癌術後 排便サポートアプリ</h1>
+    <p>排便状態を毎日記録し、症状の推移と生活への影響を可視化する試作版 v0.2</p>
   </header>
 
   <main>
     <div class="notice">
       <strong>重要：</strong>
-      このアプリは開発・検討用の試作版です。
-      実在患者の氏名、患者番号、住所、電話番号などは入力しないでください。
+      開発・研究用の試作版です。実在患者の氏名、患者番号、住所、電話番号などは入力しないでください。
+      現在の「AIコメント」はローカルの簡易ルールであり、診断・治療判断を行うものではありません。
     </div>
 
     <nav class="tabs">
-      <button class="tab-button active" data-tab="inputPanel">
-        患者記録
-      </button>
-
-      <button class="tab-button" data-tab="masterPanel">
-        術式管理
-      </button>
-
-      <button class="tab-button" data-tab="rulePanel">
-        対応ルール
-      </button>
-
-      <button class="tab-button" data-tab="recordPanel">
-        保存記録
-      </button>
+      <button class="tab-button active" data-tab="inputPanel">今日の排便記録</button>
+      <button class="tab-button" data-tab="historyPanel">記録履歴</button>
+      <button class="tab-button" data-tab="profilePanel">手術情報</button>
     </nav>
 
-    <!-- 患者入力画面 -->
     <section id="inputPanel" class="tab-panel active">
       <div class="grid grid-2">
         <article class="card">
           <h2>患者・手術情報</h2>
-
           <label>
             匿名患者コード
-            <input
-              id="patientCode"
-              type="text"
-              placeholder="例：TEST-001"
-            />
+            <input id="patientCode" type="text" placeholder="例：TEST-001" />
           </label>
-
           <label>
             術式
-            <select id="surgerySelect">
+            <select id="surgeryType">
               <option value="">選択してください</option>
+              <option>右半結腸切除術</option>
+              <option>S状結腸切除術</option>
+              <option>高位前方切除術</option>
+              <option>低位前方切除術</option>
+              <option>ISR</option>
+              <option>腹会陰式直腸切断術</option>
+              <option>ストーマ閉鎖術</option>
+              <option>その他</option>
             </select>
           </label>
-
           <label>
             手術日
             <input id="surgeryDate" type="date" />
           </label>
-
           <div class="postop-box">
             <span>術後日数</span>
-            <strong id="postopDayDisplay">—</strong>
+            <strong id="postopDay">—</strong>
           </div>
         </article>
 
         <article class="card">
-          <h2>本日の全身状態</h2>
-
+          <h2>今日の基本情報</h2>
           <div class="grid grid-2">
             <label>
-              体温（℃）
-              <input
-                id="temperature"
-                type="number"
-                step="0.1"
-                placeholder="36.7"
-              />
+              記録日
+              <input id="recordDate" type="date" />
             </label>
-
             <label>
-              脈拍（回/分）
-              <input
-                id="pulse"
-                type="number"
-                placeholder="72"
-              />
+              排便回数
+              <input id="bowelCount" type="number" min="0" placeholder="例：6" />
             </label>
-
             <label>
-              体重（kg）
-              <input
-                id="weight"
-                type="number"
-                step="0.1"
-                placeholder="60.0"
-              />
-            </label>
-
-            <label>
-              食事摂取量
-              <select id="foodIntake">
+              Bristol便形状
+              <select id="bristol">
                 <option value="">選択してください</option>
-                <option value="good">ほぼ全量摂取</option>
-                <option value="half">半分程度</option>
-                <option value="poor">ほとんど取れない</option>
+                <option value="1">1：硬い兎糞状</option>
+                <option value="2">2：硬いソーセージ状</option>
+                <option value="3">3：表面にひび割れ</option>
+                <option value="4">4：滑らかで柔らかい</option>
+                <option value="5">5：柔らかい半固形</option>
+                <option value="6">6：泥状</option>
+                <option value="7">7：水様便</option>
               </select>
+            </label>
+            <label>
+              夜間の排便回数
+              <input id="nightBowelCount" type="number" min="0" placeholder="例：1" />
             </label>
           </div>
         </article>
       </div>
 
       <article class="card">
-        <h2>症状</h2>
-
-        <div class="symptom-list">
-          <label class="symptom-item">
-            <input id="vomiting" type="checkbox" />
-            嘔吐
-          </label>
-
-          <label class="symptom-item">
-            <input id="abdominalPain" type="checkbox" />
-            強い腹痛
-          </label>
-
-          <label class="symptom-item">
-            <input id="abdominalDistension" type="checkbox" />
-            腹部膨満
-          </label>
-
-          <label class="symptom-item">
-            <input id="oralIntakePoor" type="checkbox" />
-            水分・食事が取れない
-          </label>
-
-          <label class="symptom-item">
-            <input id="noGasStool" type="checkbox" />
-            排便・排ガス停止
-          </label>
-
-          <label class="symptom-item">
-            <input id="woundProblem" type="checkbox" />
-            創部の発赤・排膿
-          </label>
-
-          <label class="symptom-item">
-            <input id="stomaHighOutput" type="checkbox" />
-            ストーマ高排液
-          </label>
-
-          <label class="symptom-item">
-            <input id="urgency" type="checkbox" />
-            便意切迫
-          </label>
-
-          <label class="symptom-item">
-            <input id="incontinence" type="checkbox" />
-            便失禁
-          </label>
+        <h2>排便症状</h2>
+        <div class="check-grid">
+          <label class="check-item"><input id="urgency" type="checkbox" />便意切迫</label>
+          <label class="check-item"><input id="incontinence" type="checkbox" />便失禁</label>
+          <label class="check-item"><input id="soiling" type="checkbox" />Soiling</label>
+          <label class="check-item"><input id="clustering" type="checkbox" />分割排便・Clustering</label>
+          <label class="check-item"><input id="incomplete" type="checkbox" />残便感</label>
+          <label class="check-item"><input id="difficulty" type="checkbox" />排便困難</label>
+          <label class="check-item"><input id="perianalPain" type="checkbox" />肛門痛</label>
+          <label class="check-item"><input id="skinProblem" type="checkbox" />肛門周囲皮膚障害</label>
+          <label class="check-item"><input id="gasDiscrimination" type="checkbox" />便とガスの区別困難</label>
         </div>
 
         <div class="grid grid-2">
           <label>
-            1日の排便回数
-            <input
-              id="bowelCount"
-              type="number"
-              min="0"
-              placeholder="0"
-            />
-          </label>
-
-          <label>
-            Bristol便形状
-            <select id="bristolScale">
+            排便による生活への支障
+            <select id="lifeImpact">
               <option value="">選択してください</option>
-              <option value="1">1：硬い兎糞状</option>
-              <option value="2">2：硬いソーセージ状</option>
-              <option value="3">3：表面にひび割れ</option>
-              <option value="4">4：滑らかで柔らかい</option>
-              <option value="5">5：柔らかい半固形</option>
-              <option value="6">6：泥状</option>
-              <option value="7">7：水様便</option>
+              <option value="0">0：ほとんど支障なし</option>
+              <option value="1">1：少し支障がある</option>
+              <option value="2">2：かなり支障がある</option>
+              <option value="3">3：非常に支障がある</option>
+            </select>
+          </label>
+          <label>
+            本日の満足度
+            <select id="satisfaction">
+              <option value="">選択してください</option>
+              <option value="5">5：とても良い</option>
+              <option value="4">4：良い</option>
+              <option value="3">3：普通</option>
+              <option value="2">2：悪い</option>
+              <option value="1">1：とても悪い</option>
             </select>
           </label>
         </div>
 
         <label>
-          患者の困りごと・自由記載
-          <textarea
-            id="patientConcern"
-            rows="4"
-            placeholder="本日困っていることや、いつもと違う症状を入力してください"
-          ></textarea>
+          今日困ったこと・自由記載
+          <textarea id="concern" rows="4" placeholder="例：食後すぐに何度もトイレへ行き、外出が不安だった"></textarea>
         </label>
 
-        <button
-          id="evaluateButton"
-          class="primary-button"
-          type="button"
-        >
-          対応を判定する
-        </button>
+        <div class="button-row">
+          <button id="summaryButton" class="primary" type="button">今日の状態をまとめる</button>
+          <button id="aiButton" class="secondary" type="button">AIコメント（試作）</button>
+          <button id="saveButton" class="secondary" type="button">記録を保存する</button>
+        </div>
       </article>
 
-      <article
-        id="evaluationCard"
-        class="card evaluation-card hidden"
-      >
-        <div class="evaluation-header">
-          <h2>判定結果</h2>
+      <article id="summaryCard" class="card hidden">
+        <h2>本日の排便サマリー</h2>
+        <div id="summaryText" class="summary-box"></div>
+      </article>
 
-          <span
-            id="severityBadge"
-            class="severity-badge green"
-          >
-            緑
-          </span>
-        </div>
-
-        <p id="evaluationSummary"></p>
-
-        <ul id="matchedRuleList"></ul>
-
+      <article id="aiCard" class="card ai-card hidden">
+        <h2>AIコメント（試作）</h2>
+        <div id="aiText" class="summary-box"></div>
         <p class="disclaimer">
-          この判定は試作ルールに基づく補助情報です。
-          医師による診断や受診判断を代替するものではありません。
+          現在はAIモデルには接続しておらず、入力内容をもとにした簡易ルール表示です。
+          将来は臨床データ、術式、術後時期、過去の経時データを用いて回答を個別化する設計を想定しています。
         </p>
-
-        <button
-          id="saveRecordButton"
-          class="secondary-button"
-          type="button"
-        >
-          この記録を保存する
-        </button>
       </article>
     </section>
 
-    <!-- 術式マスタ -->
-    <section id="masterPanel" class="tab-panel">
-      <article class="card">
-        <h2>術式を追加</h2>
-
-        <form id="surgeryForm">
-          <label>
-            術式名
-            <input
-              id="newSurgeryName"
-              type="text"
-              placeholder="例：低位前方切除術"
-              required
-            />
-          </label>
-
-          <label>
-            術後に想定される機能障害・注意点
-            <textarea
-              id="newSurgeryDescription"
-              rows="3"
-              placeholder="例：頻便、便意切迫、分割排便、便失禁"
-            ></textarea>
-          </label>
-
-          <button class="primary-button" type="submit">
-            術式を追加
-          </button>
-        </form>
-      </article>
-
-      <article class="card">
-        <h2>登録済み術式</h2>
-        <div id="surgeryList"></div>
-      </article>
-    </section>
-
-    <!-- 対応ルール -->
-    <section id="rulePanel" class="tab-panel">
-      <article class="card">
-        <h2>対応ルールを追加</h2>
-
-        <form id="ruleForm">
-          <label>
-            ルール名
-            <input
-              id="ruleName"
-              type="text"
-              placeholder="例：術後早期の発熱"
-              required
-            />
-          </label>
-
-          <label>
-            対象術式
-            <select id="ruleSurgerySelect">
-              <option value="ALL">すべての術式</option>
-            </select>
-          </label>
-
-          <div class="grid grid-2">
-            <label>
-              術後日数：開始
-              <input
-                id="ruleDayFrom"
-                type="number"
-                min="0"
-                value="0"
-              />
-            </label>
-
-            <label>
-              術後日数：終了
-              <input
-                id="ruleDayTo"
-                type="number"
-                min="0"
-                value="3650"
-              />
-            </label>
-          </div>
-
-          <label>
-            判定対象
-            <select id="ruleField">
-              <option value="temperature">体温</option>
-              <option value="pulse">脈拍</option>
-              <option value="bowelCount">排便回数</option>
-              <option value="vomiting">嘔吐</option>
-              <option value="abdominalPain">強い腹痛</option>
-              <option value="abdominalDistension">腹部膨満</option>
-              <option value="oralIntakePoor">食事摂取不良</option>
-              <option value="noGasStool">排便・排ガス停止</option>
-              <option value="woundProblem">創部異常</option>
-              <option value="stomaHighOutput">ストーマ高排液</option>
-              <option value="urgency">便意切迫</option>
-              <option value="incontinence">便失禁</option>
-            </select>
-          </label>
-
-          <div class="grid grid-2">
-            <label>
-              比較条件
-              <select id="ruleOperator">
-                <option value="gte">以上</option>
-                <option value="lte">以下</option>
-                <option value="eq">一致</option>
-              </select>
-            </label>
-
-            <label>
-              しきい値
-              <input
-                id="ruleThreshold"
-                type="number"
-                step="0.1"
-                value="1"
-              />
-            </label>
-          </div>
-
-          <label>
-            アラートレベル
-            <select id="ruleSeverity">
-              <option value="red">
-                赤：至急連絡・受診を検討
-              </option>
-
-              <option value="yellow">
-                黄：早めに相談
-              </option>
-
-              <option value="green">
-                緑：経過観察・セルフケア
-              </option>
-            </select>
-          </label>
-
-          <label>
-            患者への案内文
-            <textarea
-              id="ruleMessage"
-              rows="3"
-              required
-              placeholder="患者画面に表示する文章"
-            ></textarea>
-          </label>
-
-          <label>
-            医療者向けメモ
-            <textarea
-              id="ruleClinicianNote"
-              rows="3"
-              placeholder="鑑別や確認事項など"
-            ></textarea>
-          </label>
-
-          <button class="primary-button" type="submit">
-            ルールを追加
-          </button>
-        </form>
-      </article>
-
+    <section id="historyPanel" class="tab-panel">
       <article class="card">
         <div class="section-header">
-          <h2>登録済み対応ルール</h2>
-
-          <button
-            id="resetRuleButton"
-            class="danger-button small-button"
-            type="button"
-          >
-            初期状態に戻す
-          </button>
-        </div>
-
-        <div id="ruleList"></div>
-      </article>
-    </section>
-
-    <!-- 保存記録 -->
-    <section id="recordPanel" class="tab-panel">
-      <article class="card">
-        <div class="section-header">
-          <h2>保存済み記録</h2>
-
-          <div class="item-buttons">
-            <button
-              id="exportButton"
-              class="secondary-button small-button"
-              type="button"
-            >
-              JSON書き出し
-            </button>
-
-            <button
-              id="clearRecordButton"
-              class="danger-button small-button"
-              type="button"
-            >
-              全記録を削除
-            </button>
+          <h2>保存済み排便記録</h2>
+          <div class="button-row">
+            <button id="exportButton" class="secondary small" type="button">JSON書き出し</button>
+            <button id="clearButton" class="danger small" type="button">全記録を削除</button>
           </div>
         </div>
-
         <div id="recordList"></div>
+      </article>
+    </section>
+
+    <section id="profilePanel" class="tab-panel">
+      <article class="card">
+        <h2>今後追加したい患者背景</h2>
+        <p>
+          現時点では術式と術後日数のみを使用します。将来的には、吻合部位、ストーマ有無、
+          術前放射線治療、TNT、年齢、性別、LARS score、薬剤、食事、生活習慣などを追加し、
+          臨床データとAI回答を結びつけられる構造に拡張できます。
+        </p>
       </article>
     </section>
   </main>
 
-  <footer>
-    大腸癌術後サポートアプリ 試作版 v0.1
-  </footer>
+  <footer>大腸癌術後 排便サポートアプリ 試作版 v0.2</footer>
 
   <script>
     "use strict";
 
-    const STORAGE_KEYS = {
-      surgeries: "crcPostopSurgeries",
-      rules: "crcPostopRules",
-      records: "crcPostopRecords"
-    };
+    const STORAGE_KEY = "crcBowelRecordsV02";
+    let records = loadRecords();
 
-    const symptomFields = [
-      "vomiting",
-      "abdominalPain",
-      "abdominalDistension",
-      "oralIntakePoor",
-      "noGasStool",
-      "woundProblem",
-      "stomaHighOutput",
-      "urgency",
-      "incontinence"
+    const symptomIds = [
+      "urgency", "incontinence", "soiling", "clustering", "incomplete",
+      "difficulty", "perianalPain", "skinProblem", "gasDiscrimination"
     ];
 
-    const fieldLabels = {
-      temperature: "体温",
-      pulse: "脈拍",
-      bowelCount: "排便回数",
-      vomiting: "嘔吐",
-      abdominalPain: "強い腹痛",
-      abdominalDistension: "腹部膨満",
-      oralIntakePoor: "食事摂取不良",
-      noGasStool: "排便・排ガス停止",
-      woundProblem: "創部異常",
-      stomaHighOutput: "ストーマ高排液",
+    const symptomLabels = {
       urgency: "便意切迫",
-      incontinence: "便失禁"
+      incontinence: "便失禁",
+      soiling: "Soiling",
+      clustering: "分割排便・Clustering",
+      incomplete: "残便感",
+      difficulty: "排便困難",
+      perianalPain: "肛門痛",
+      skinProblem: "肛門周囲皮膚障害",
+      gasDiscrimination: "便とガスの区別困難"
     };
-
-    const defaultSurgeries = [
-      {
-        id: createId(),
-        name: "右半結腸切除術",
-        description: "下痢、頻便、胆汁酸性下痢など"
-      },
-      {
-        id: createId(),
-        name: "S状結腸切除術",
-        description: "便秘、排便困難、腹部膨満など"
-      },
-      {
-        id: createId(),
-        name: "低位前方切除術",
-        description:
-          "LARS、頻便、便意切迫、分割排便、便失禁など"
-      },
-      {
-        id: createId(),
-        name: "ISR",
-        description:
-          "高度LARS、soiling、排便困難、便失禁など"
-      },
-      {
-        id: createId(),
-        name: "腹会陰式直腸切断術",
-        description:
-          "永久ストーマ、装具トラブル、皮膚障害など"
-      },
-      {
-        id: createId(),
-        name: "一時的回腸人工肛門造設",
-        description:
-          "ストーマ高排液、脱水、腎機能悪化など"
-      },
-      {
-        id: createId(),
-        name: "ストーマ閉鎖術",
-        description:
-          "頻便、便意切迫、肛門周囲皮膚障害など"
-      }
-    ];
-
-    const defaultRules = [
-      {
-        id: createId(),
-        name: "術後早期の発熱",
-        surgeryId: "ALL",
-        dayFrom: 0,
-        dayTo: 30,
-        field: "temperature",
-        operator: "gte",
-        threshold: 38,
-        severity: "red",
-        message:
-          "38℃以上の発熱があります。術後合併症の可能性があるため、施設の連絡先へ速やかに連絡してください。",
-        clinicianNote:
-          "感染、縫合不全、尿路感染、肺炎などを確認する。"
-      },
-      {
-        id: createId(),
-        name: "術後早期の頻脈",
-        surgeryId: "ALL",
-        dayFrom: 0,
-        dayTo: 14,
-        field: "pulse",
-        operator: "gte",
-        threshold: 110,
-        severity: "red",
-        message:
-          "脈拍が速くなっています。安静にして再測定し、改善しない場合は医療機関へ連絡してください。",
-        clinicianNote:
-          "脱水、感染、出血、疼痛、心疾患などを確認する。"
-      },
-      {
-        id: createId(),
-        name: "嘔吐",
-        surgeryId: "ALL",
-        dayFrom: 0,
-        dayTo: 90,
-        field: "vomiting",
-        operator: "eq",
-        threshold: 1,
-        severity: "red",
-        message:
-          "嘔吐があります。水分が取れない場合や腹痛・腹部膨満を伴う場合は、速やかに医療機関へ連絡してください。",
-        clinicianNote:
-          "腸閉塞、感染、脱水、薬剤性などを評価する。"
-      },
-      {
-        id: createId(),
-        name: "排便・排ガス停止",
-        surgeryId: "ALL",
-        dayFrom: 0,
-        dayTo: 90,
-        field: "noGasStool",
-        operator: "eq",
-        threshold: 1,
-        severity: "red",
-        message:
-          "排便・排ガスが停止しています。腹部膨満や嘔吐を伴う場合は、速やかに医療機関へ連絡してください。",
-        clinicianNote:
-          "術後腸閉塞や麻痺性イレウスなどを評価する。"
-      },
-      {
-        id: createId(),
-        name: "創部異常",
-        surgeryId: "ALL",
-        dayFrom: 0,
-        dayTo: 30,
-        field: "woundProblem",
-        operator: "eq",
-        threshold: 1,
-        severity: "yellow",
-        message:
-          "創部に発赤や排液があります。写真や症状を記録し、早めに担当部署へ相談してください。",
-        clinicianNote:
-          "SSI、皮下膿瘍、離開などを確認する。"
-      },
-      {
-        id: createId(),
-        name: "ストーマ高排液",
-        surgeryId: "ALL",
-        dayFrom: 0,
-        dayTo: 180,
-        field: "stomaHighOutput",
-        operator: "eq",
-        threshold: 1,
-        severity: "yellow",
-        message:
-          "ストーマ排液が多くなっています。排液量、水分摂取量、尿量を記録し、早めに担当部署へ相談してください。",
-        clinicianNote:
-          "脱水、電解質異常、腎機能障害を確認する。"
-      },
-      {
-        id: createId(),
-        name: "排便回数増加",
-        surgeryId: "ALL",
-        dayFrom: 0,
-        dayTo: 3650,
-        field: "bowelCount",
-        operator: "gte",
-        threshold: 10,
-        severity: "yellow",
-        message:
-          "排便回数が多くなっています。脱水や肛門周囲皮膚障害に注意し、症状が続く場合は外来へ相談してください。",
-        clinicianNote:
-          "術式や術後時期を考慮し、LARS、感染、薬剤性などを確認する。"
-      },
-      {
-        id: createId(),
-        name: "便意切迫",
-        surgeryId: "ALL",
-        dayFrom: 14,
-        dayTo: 3650,
-        field: "urgency",
-        operator: "eq",
-        threshold: 1,
-        severity: "green",
-        message:
-          "便意切迫は直腸手術後にみられることがあります。排便時刻や食事との関係を記録し、次回外来で相談してください。",
-        clinicianNote:
-          "LARS評価や排便指導を検討する。"
-      }
-    ];
-
-    let surgeries = loadFromStorage(
-      STORAGE_KEYS.surgeries,
-      defaultSurgeries
-    );
-
-    let rules = loadFromStorage(
-      STORAGE_KEYS.rules,
-      defaultRules
-    );
-
-    let records = loadFromStorage(
-      STORAGE_KEYS.records,
-      []
-    );
-
-    let currentEvaluation = null;
 
     function createId() {
-      if (
-        typeof crypto !== "undefined" &&
-        typeof crypto.randomUUID === "function"
-      ) {
-        return crypto.randomUUID();
-      }
-
-      return (
-        Date.now().toString(36) +
-        Math.random().toString(36).slice(2)
-      );
+      return (crypto?.randomUUID?.() || (Date.now().toString(36) + Math.random().toString(36).slice(2)));
     }
 
-    function cloneData(data) {
-      return JSON.parse(JSON.stringify(data));
-    }
-
-    function loadFromStorage(key, fallbackValue) {
+    function loadRecords() {
       try {
-        const storedValue = localStorage.getItem(key);
-
-        if (!storedValue) {
-          return cloneData(fallbackValue);
-        }
-
-        return JSON.parse(storedValue);
-      } catch (error) {
-        console.error("保存データの読み込みに失敗しました。", error);
-        return cloneData(fallbackValue);
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      } catch {
+        return [];
       }
     }
 
-    function saveToStorage(key, value) {
-      localStorage.setItem(key, JSON.stringify(value));
+    function saveRecords() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
     }
 
     function escapeHtml(value) {
-      const text = String(value ?? "");
-
-      return text.replace(
-        /[&<>"']/g,
-        character => {
-          const map = {
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': "&quot;",
-            "'": "&#039;"
-          };
-
-          return map[character];
-        }
-      );
+      return String(value ?? "").replace(/[&<>"']/g, c => ({
+        "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;"
+      }[c]));
     }
 
-    function severityLabel(severity) {
-      const labels = {
-        red: "赤",
-        yellow: "黄",
-        green: "緑"
-      };
-
-      return labels[severity] ?? "緑";
-    }
-
-    function severityRank(severity) {
-      const ranks = {
-        green: 1,
-        yellow: 2,
-        red: 3
-      };
-
-      return ranks[severity] ?? 1;
-    }
-
-    function operatorLabel(operator) {
-      const labels = {
-        gte: "以上",
-        lte: "以下",
-        eq: "一致"
-      };
-
-      return labels[operator] ?? operator;
+    function setToday() {
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const mm = String(now.getMonth() + 1).padStart(2, "0");
+      const dd = String(now.getDate()).padStart(2, "0");
+      document.getElementById("recordDate").value = `${yyyy}-${mm}-${dd}`;
     }
 
     function calculatePostopDay() {
-      const surgeryDateValue =
-        document.getElementById("surgeryDate").value;
+      const surgeryDate = document.getElementById("surgeryDate").value;
+      const recordDate = document.getElementById("recordDate").value;
+      if (!surgeryDate || !recordDate) return null;
 
-      if (!surgeryDateValue) {
-        return null;
-      }
-
-      const surgeryDate =
-        new Date(`${surgeryDateValue}T00:00:00`);
-
-      const now = new Date();
-
-      const today = new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate()
-      );
-
-      const difference =
-        today.getTime() - surgeryDate.getTime();
-
-      return Math.floor(difference / 86400000);
+      const s = new Date(`${surgeryDate}T00:00:00`);
+      const r = new Date(`${recordDate}T00:00:00`);
+      return Math.floor((r - s) / 86400000);
     }
 
-    function updatePostopDayDisplay() {
-      const postopDay = calculatePostopDay();
-
-      document.getElementById(
-        "postopDayDisplay"
-      ).textContent =
-        postopDay === null ? "—" : `${postopDay}日`;
+    function updatePostopDay() {
+      const day = calculatePostopDay();
+      document.getElementById("postopDay").textContent =
+        day === null ? "—" : day < 0 ? "日付確認" : `${day}日`;
     }
 
-    function renderSurgeryOptions() {
-      const surgerySelect =
-        document.getElementById("surgerySelect");
-
-      const ruleSurgerySelect =
-        document.getElementById("ruleSurgerySelect");
-
-      surgerySelect.innerHTML =
-        '<option value="">選択してください</option>';
-
-      ruleSurgerySelect.innerHTML =
-        '<option value="ALL">すべての術式</option>';
-
-      surgeries.forEach(surgery => {
-        const patientOption =
-          document.createElement("option");
-
-        patientOption.value = surgery.id;
-        patientOption.textContent = surgery.name;
-
-        surgerySelect.appendChild(patientOption);
-
-        const ruleOption =
-          document.createElement("option");
-
-        ruleOption.value = surgery.id;
-        ruleOption.textContent = surgery.name;
-
-        ruleSurgerySelect.appendChild(ruleOption);
-      });
-    }
-
-    function renderSurgeryList() {
-      const surgeryList =
-        document.getElementById("surgeryList");
-
-      if (surgeries.length === 0) {
-        surgeryList.innerHTML =
-          '<p class="muted">術式が登録されていません。</p>';
-
-        return;
-      }
-
-      surgeryList.innerHTML =
-        surgeries
-          .map(
-            surgery => `
-              <div class="surgery-item">
-                <h3>${escapeHtml(surgery.name)}</h3>
-
-                <p>
-                  ${escapeHtml(
-                    surgery.description || "説明なし"
-                  )}
-                </p>
-
-                <div class="item-buttons">
-                  <button
-                    class="secondary-button small-button"
-                    type="button"
-                    onclick="editSurgery('${surgery.id}')"
-                  >
-                    編集
-                  </button>
-
-                  <button
-                    class="danger-button small-button"
-                    type="button"
-                    onclick="deleteSurgery('${surgery.id}')"
-                  >
-                    削除
-                  </button>
-                </div>
-              </div>
-            `
-          )
-          .join("");
-    }
-
-    function renderRuleList() {
-      const ruleList =
-        document.getElementById("ruleList");
-
-      if (rules.length === 0) {
-        ruleList.innerHTML =
-          '<p class="muted">対応ルールがありません。</p>';
-
-        return;
-      }
-
-      ruleList.innerHTML =
-        rules
-          .map(rule => {
-            const surgery =
-              surgeries.find(
-                item => item.id === rule.surgeryId
-              );
-
-            const surgeryName =
-              rule.surgeryId === "ALL"
-                ? "すべての術式"
-                : surgery?.name ?? "削除済み術式";
-
-            return `
-              <div class="rule-item">
-                <h3>
-                  ${escapeHtml(rule.name)}
-
-                  <span
-                    class="severity-badge ${rule.severity}"
-                  >
-                    ${severityLabel(rule.severity)}
-                  </span>
-                </h3>
-
-                <p>
-                  <strong>対象術式：</strong>
-                  ${escapeHtml(surgeryName)}
-                </p>
-
-                <p>
-                  <strong>術後時期：</strong>
-                  術後${rule.dayFrom}日～
-                  ${rule.dayTo}日
-                </p>
-
-                <p>
-                  <strong>条件：</strong>
-                  ${escapeHtml(
-                    fieldLabels[rule.field] ?? rule.field
-                  )}
-                  ${operatorLabel(rule.operator)}
-                  ${rule.threshold}
-                </p>
-
-                <p>
-                  <strong>患者表示：</strong>
-                  ${escapeHtml(rule.message)}
-                </p>
-
-                <p class="muted">
-                  医療者メモ：
-                  ${escapeHtml(
-                    rule.clinicianNote || "なし"
-                  )}
-                </p>
-
-                <div class="item-buttons">
-                  <button
-                    class="secondary-button small-button"
-                    type="button"
-                    onclick="editRule('${rule.id}')"
-                  >
-                    編集
-                  </button>
-
-                  <button
-                    class="danger-button small-button"
-                    type="button"
-                    onclick="deleteRule('${rule.id}')"
-                  >
-                    削除
-                  </button>
-                </div>
-              </div>
-            `;
-          })
-          .join("");
-    }
-
-    function renderRecordList() {
-      const recordList =
-        document.getElementById("recordList");
-
-      if (records.length === 0) {
-        recordList.innerHTML =
-          '<p class="muted">保存された記録はありません。</p>';
-
-        return;
-      }
-
-      recordList.innerHTML =
-        [...records]
-          .reverse()
-          .map(
-            record => `
-              <div class="record-item">
-                <h3>
-                  ${escapeHtml(
-                    record.patientCode || "匿名患者"
-                  )}
-
-                  <span
-                    class="severity-badge ${record.severity}"
-                  >
-                    ${severityLabel(record.severity)}
-                  </span>
-                </h3>
-
-                <p>
-                  ${escapeHtml(record.surgeryName)}
-                  ／術後${record.postopDay}日
-                </p>
-
-                <p>
-                  記録日時：
-                  ${new Date(
-                    record.createdAt
-                  ).toLocaleString("ja-JP")}
-                </p>
-
-                <p>
-                  体温：
-                  ${record.temperature || "—"}℃
-                  ／脈拍：
-                  ${record.pulse || "—"}回/分
-                  ／排便：
-                  ${
-                    record.bowelCount === null
-                      ? "—"
-                      : record.bowelCount
-                  }回
-                </p>
-
-                <p>${escapeHtml(record.summary)}</p>
-
-                <div class="item-buttons">
-                  <button
-                    class="danger-button small-button"
-                    type="button"
-                    onclick="deleteRecord('${record.id}')"
-                  >
-                    削除
-                  </button>
-                </div>
-              </div>
-            `
-          )
-          .join("");
-    }
-
-    function getInputFieldValue(fieldName) {
-      if (
-        fieldName === "temperature" ||
-        fieldName === "pulse" ||
-        fieldName === "bowelCount"
-      ) {
-        const rawValue =
-          document.getElementById(fieldName).value;
-
-        if (rawValue === "") {
-          return null;
-        }
-
-        return Number(rawValue);
-      }
-
-      const checkbox =
-        document.getElementById(fieldName);
-
-      return checkbox?.checked ? 1 : 0;
-    }
-
-    function conditionMatches(
-      actualValue,
-      operator,
-      threshold
-    ) {
-      if (
-        actualValue === null ||
-        Number.isNaN(actualValue)
-      ) {
-        return false;
-      }
-
-      if (operator === "gte") {
-        return actualValue >= threshold;
-      }
-
-      if (operator === "lte") {
-        return actualValue <= threshold;
-      }
-
-      if (operator === "eq") {
-        return actualValue === threshold;
-      }
-
-      return false;
-    }
-
-    function evaluatePatientInput() {
-      const surgeryId =
-        document.getElementById("surgerySelect").value;
-
-      const postopDay = calculatePostopDay();
-
-      if (!surgeryId) {
-        alert("術式を選択してください。");
-        return;
-      }
-
-      if (postopDay === null) {
-        alert("手術日を入力してください。");
-        return;
-      }
-
-      if (postopDay < 0) {
-        alert("手術日が未来の日付になっています。");
-        return;
-      }
-
-      const matchedRules =
-        rules.filter(rule => {
-          const surgeryMatches =
-            rule.surgeryId === "ALL" ||
-            rule.surgeryId === surgeryId;
-
-          const postopDayMatches =
-            postopDay >= Number(rule.dayFrom) &&
-            postopDay <= Number(rule.dayTo);
-
-          const actualValue =
-            getInputFieldValue(rule.field);
-
-          const valueMatches =
-            conditionMatches(
-              actualValue,
-              rule.operator,
-              Number(rule.threshold)
-            );
-
-          return (
-            surgeryMatches &&
-            postopDayMatches &&
-            valueMatches
-          );
-        });
-
-      let finalSeverity = "green";
-
-      matchedRules.forEach(rule => {
-        if (
-          severityRank(rule.severity) >
-          severityRank(finalSeverity)
-        ) {
-          finalSeverity = rule.severity;
-        }
-      });
-
-      const summary =
-        matchedRules.length > 0
-          ? `${matchedRules.length}件の対応ルールに該当しました。`
-          : "現在の入力では登録された緊急ルールには該当しません。症状が続く場合や判断に迷う場合は、医療機関へ相談してください。";
-
-      const evaluationCard =
-        document.getElementById("evaluationCard");
-
-      evaluationCard.classList.remove(
-        "hidden",
-        "green",
-        "yellow",
-        "red"
-      );
-
-      evaluationCard.classList.add(finalSeverity);
-
-      const severityBadge =
-        document.getElementById("severityBadge");
-
-      severityBadge.className =
-        `severity-badge ${finalSeverity}`;
-
-      severityBadge.textContent =
-        severityLabel(finalSeverity);
-
-      document.getElementById(
-        "evaluationSummary"
-      ).textContent = summary;
-
-      const matchedRuleList =
-        document.getElementById("matchedRuleList");
-
-      matchedRuleList.innerHTML =
-        matchedRules.length > 0
-          ? matchedRules
-              .map(
-                rule => `
-                  <li>
-                    <strong>
-                      ${escapeHtml(rule.name)}
-                    </strong>
-                    ：${escapeHtml(rule.message)}
-                  </li>
-                `
-              )
-              .join("")
-          : "<li>該当する登録ルールはありません。</li>";
-
-      const surgery =
-        surgeries.find(
-          item => item.id === surgeryId
-        );
-
+    function collectData() {
       const symptoms = {};
+      symptomIds.forEach(id => symptoms[id] = document.getElementById(id).checked);
 
-      symptomFields.forEach(fieldName => {
-        symptoms[fieldName] =
-          document.getElementById(fieldName).checked;
-      });
+      const bowelRaw = document.getElementById("bowelCount").value;
+      const nightRaw = document.getElementById("nightBowelCount").value;
 
-      const bowelCountValue =
-        document.getElementById("bowelCount").value;
-
-      currentEvaluation = {
+      return {
         id: createId(),
         createdAt: new Date().toISOString(),
-        patientCode:
-          document
-            .getElementById("patientCode")
-            .value
-            .trim(),
-        surgeryId,
-        surgeryName: surgery?.name ?? "",
-        surgeryDate:
-          document.getElementById("surgeryDate").value,
-        postopDay,
-        temperature:
-          document.getElementById("temperature").value,
-        pulse:
-          document.getElementById("pulse").value,
-        weight:
-          document.getElementById("weight").value,
-        foodIntake:
-          document.getElementById("foodIntake").value,
-        bowelCount:
-          bowelCountValue === ""
-            ? null
-            : Number(bowelCountValue),
-        bristolScale:
-          document.getElementById("bristolScale").value,
-        patientConcern:
-          document.getElementById("patientConcern").value,
+        patientCode: document.getElementById("patientCode").value.trim(),
+        surgeryType: document.getElementById("surgeryType").value,
+        surgeryDate: document.getElementById("surgeryDate").value,
+        recordDate: document.getElementById("recordDate").value,
+        postopDay: calculatePostopDay(),
+        bowelCount: bowelRaw === "" ? null : Number(bowelRaw),
+        bristol: document.getElementById("bristol").value,
+        nightBowelCount: nightRaw === "" ? null : Number(nightRaw),
         symptoms,
-        severity: finalSeverity,
-        summary,
-        matchedRuleIds:
-          matchedRules.map(rule => rule.id)
+        lifeImpact: document.getElementById("lifeImpact").value,
+        satisfaction: document.getElementById("satisfaction").value,
+        concern: document.getElementById("concern").value.trim()
       };
-
-      evaluationCard.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
     }
 
-    function saveCurrentRecord() {
-      if (!currentEvaluation) {
-        alert("先に対応判定を行ってください。");
+    function validate(data) {
+      if (!data.surgeryType) {
+        alert("術式を選択してください。");
+        return false;
+      }
+      if (!data.surgeryDate) {
+        alert("手術日を入力してください。");
+        return false;
+      }
+      if (!data.recordDate) {
+        alert("記録日を入力してください。");
+        return false;
+      }
+      if (data.postopDay < 0) {
+        alert("記録日が手術日より前になっています。");
+        return false;
+      }
+      return true;
+    }
+
+    function symptomList(data) {
+      return symptomIds.filter(id => data.symptoms[id]).map(id => symptomLabels[id]);
+    }
+
+    function buildSummary(data) {
+      const symptoms = symptomList(data);
+      const lines = [];
+
+      lines.push(`${data.surgeryType}／術後${data.postopDay}日`);
+      lines.push(`排便回数：${data.bowelCount ?? "未入力"}回`);
+      lines.push(`Bristol：${data.bristol || "未入力"}`);
+      lines.push(`夜間排便：${data.nightBowelCount ?? "未入力"}回`);
+      lines.push(`症状：${symptoms.length ? symptoms.join("、") : "特になし"}`);
+
+      if (data.lifeImpact !== "") {
+        const labels = ["ほとんど支障なし", "少し支障あり", "かなり支障あり", "非常に支障あり"];
+        lines.push(`生活への支障：${labels[Number(data.lifeImpact)]}`);
+      }
+
+      if (data.satisfaction !== "") {
+        lines.push(`満足度：${data.satisfaction}/5`);
+      }
+
+      if (data.concern) lines.push(`自由記載：${data.concern}`);
+
+      return lines.join("\n");
+    }
+
+    function buildPrototypeAiComment(data) {
+      const comments = [];
+      const symptoms = symptomList(data);
+
+      comments.push(`術後${data.postopDay}日の排便状態として記録しました。`);
+
+      if (data.bowelCount !== null) {
+        if (data.bowelCount >= 10) {
+          comments.push("排便回数は多い状態です。回数だけでなく、便意切迫、分割排便、夜間排便、生活への支障と合わせて経時的に評価する価値があります。");
+        } else if (data.bowelCount >= 5) {
+          comments.push("排便回数はやや多めです。術式と術後時期によって許容範囲が異なるため、過去数日〜数週間の推移と一緒に見る設計が適しています。");
+        } else {
+          comments.push("排便回数だけでは大きな負担は読み取りにくいため、便意切迫や失禁などの質的症状も合わせて評価します。");
+        }
+      }
+
+      if (data.bristol === "6" || data.bristol === "7") {
+        comments.push("軟便〜水様便が記録されています。今後は食事、薬剤、術式、ストーマ閉鎖後の時期などを組み合わせると、より個別化した回答が可能です。");
+      }
+
+      if (data.symptoms.urgency || data.symptoms.clustering || data.symptoms.incontinence) {
+        comments.push("便意切迫・分割排便・便失禁は、直腸手術後の排便機能評価で重要な症状です。将来的にはLARS scoreなどの標準化指標と連動させると有用です。");
+      }
+
+      if (data.nightBowelCount !== null && data.nightBowelCount >= 2) {
+        comments.push("夜間排便が生活の質に影響している可能性があります。日中・夜間のパターンを分けて蓄積すると、改善や悪化を捉えやすくなります。");
+      }
+
+      if (data.lifeImpact === "2" || data.lifeImpact === "3") {
+        comments.push("生活への支障が大きいと記録されています。症状の強さだけでなく、患者さんが何に最も困っているかをAI回答に反映する設計が重要です。");
+      }
+
+      if (symptoms.length === 0 && (data.bowelCount ?? 0) <= 4) {
+        comments.push("現時点の入力では排便関連症状の負担は比較的小さく見えます。ただし、単日の記録よりも経時変化を重視します。");
+      }
+
+      comments.push("※現在は試作ロジックです。診断・投薬提案は行いません。");
+
+      return comments.join("\n\n");
+    }
+
+    function showSummary() {
+      const data = collectData();
+      if (!validate(data)) return;
+      document.getElementById("summaryText").textContent = buildSummary(data);
+      document.getElementById("summaryCard").classList.remove("hidden");
+    }
+
+    function showAiComment() {
+      const data = collectData();
+      if (!validate(data)) return;
+      document.getElementById("aiText").textContent = buildPrototypeAiComment(data);
+      document.getElementById("aiCard").classList.remove("hidden");
+    }
+
+    function saveRecord() {
+      const data = collectData();
+      if (!validate(data)) return;
+      data.summary = buildSummary(data);
+      records.push(data);
+      saveRecords();
+      renderRecords();
+      alert("排便記録を保存しました。");
+    }
+
+    function renderRecords() {
+      const list = document.getElementById("recordList");
+      if (!records.length) {
+        list.innerHTML = '<p class="muted">保存された記録はありません。</p>';
         return;
       }
 
-      records.push(currentEvaluation);
-
-      saveToStorage(
-        STORAGE_KEYS.records,
-        records
-      );
-
-      renderRecordList();
-
-      alert("記録を保存しました。");
+      list.innerHTML = [...records].reverse().map(record => {
+        const symptoms = symptomList(record);
+        return `
+          <div class="record-item">
+            <h3>${escapeHtml(record.recordDate)}　${escapeHtml(record.patientCode || "匿名患者")}</h3>
+            <p>${escapeHtml(record.surgeryType)}／術後${record.postopDay}日</p>
+            <p>
+              排便：${record.bowelCount ?? "—"}回　
+              Bristol：${escapeHtml(record.bristol || "—")}　
+              夜間：${record.nightBowelCount ?? "—"}回
+            </p>
+            <div>
+              ${symptoms.length
+                ? symptoms.map(x => `<span class="tag">${escapeHtml(x)}</span>`).join("")
+                : '<span class="muted">症状チェックなし</span>'}
+            </div>
+            ${record.concern ? `<p>困りごと：${escapeHtml(record.concern)}</p>` : ""}
+            <button class="danger small" type="button" onclick="deleteRecord('${record.id}')">削除</button>
+          </div>
+        `;
+      }).join("");
     }
 
+    window.deleteRecord = function(id) {
+      if (!confirm("この記録を削除しますか？")) return;
+      records = records.filter(r => r.id !== id);
+      saveRecords();
+      renderRecords();
+    };
+
     function exportData() {
-      const exportObject = {
+      const blob = new Blob([JSON.stringify({
         exportedAt: new Date().toISOString(),
-        surgeries,
-        rules,
+        version: "0.2",
         records
-      };
+      }, null, 2)], { type: "application/json" });
 
-      const fileContent =
-        JSON.stringify(exportObject, null, 2);
-
-      const blob =
-        new Blob(
-          [fileContent],
-          {
-            type: "application/json"
-          }
-        );
-
-      const url =
-        URL.createObjectURL(blob);
-
-      const downloadLink =
-        document.createElement("a");
-
-      downloadLink.href = url;
-
-      downloadLink.download =
-        `crc-postop-data-${
-          new Date()
-            .toISOString()
-            .slice(0, 10)
-        }.json`;
-
-      downloadLink.click();
-
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `crc-bowel-records-${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
       URL.revokeObjectURL(url);
     }
 
-    window.editSurgery = function (surgeryId) {
-      const surgery =
-        surgeries.find(
-          item => item.id === surgeryId
-        );
-
-      if (!surgery) {
-        return;
-      }
-
-      const newName =
-        window.prompt(
-          "術式名を編集してください。",
-          surgery.name
-        );
-
-      if (newName === null) {
-        return;
-      }
-
-      const newDescription =
-        window.prompt(
-          "機能障害・注意点を編集してください。",
-          surgery.description
-        );
-
-      if (newDescription === null) {
-        return;
-      }
-
-      surgery.name = newName.trim();
-      surgery.description =
-        newDescription.trim();
-
-      saveToStorage(
-        STORAGE_KEYS.surgeries,
-        surgeries
-      );
-
-      renderSurgeryOptions();
-      renderSurgeryList();
-      renderRuleList();
-    };
-
-    window.deleteSurgery = function (surgeryId) {
-      const confirmed =
-        window.confirm(
-          "この術式を削除しますか？"
-        );
-
-      if (!confirmed) {
-        return;
-      }
-
-      surgeries =
-        surgeries.filter(
-          item => item.id !== surgeryId
-        );
-
-      saveToStorage(
-        STORAGE_KEYS.surgeries,
-        surgeries
-      );
-
-      renderSurgeryOptions();
-      renderSurgeryList();
-      renderRuleList();
-    };
-
-    window.editRule = function (ruleId) {
-      const rule =
-        rules.find(item => item.id === ruleId);
-
-      if (!rule) {
-        return;
-      }
-
-      const newRuleName =
-        window.prompt(
-          "ルール名を編集してください。",
-          rule.name
-        );
-
-      if (newRuleName === null) {
-        return;
-      }
-
-      const newMessage =
-        window.prompt(
-          "患者への案内文を編集してください。",
-          rule.message
-        );
-
-      if (newMessage === null) {
-        return;
-      }
-
-      const newClinicianNote =
-        window.prompt(
-          "医療者向けメモを編集してください。",
-          rule.clinicianNote
-        );
-
-      if (newClinicianNote === null) {
-        return;
-      }
-
-      rule.name = newRuleName.trim();
-      rule.message = newMessage.trim();
-      rule.clinicianNote =
-        newClinicianNote.trim();
-
-      saveToStorage(
-        STORAGE_KEYS.rules,
-        rules
-      );
-
-      renderRuleList();
-    };
-
-    window.deleteRule = function (ruleId) {
-      const confirmed =
-        window.confirm(
-          "この対応ルールを削除しますか？"
-        );
-
-      if (!confirmed) {
-        return;
-      }
-
-      rules =
-        rules.filter(
-          item => item.id !== ruleId
-        );
-
-      saveToStorage(
-        STORAGE_KEYS.rules,
-        rules
-      );
-
-      renderRuleList();
-    };
-
-    window.deleteRecord = function (recordId) {
-      const confirmed =
-        window.confirm(
-          "この保存記録を削除しますか？"
-        );
-
-      if (!confirmed) {
-        return;
-      }
-
-      records =
-        records.filter(
-          item => item.id !== recordId
-        );
-
-      saveToStorage(
-        STORAGE_KEYS.records,
-        records
-      );
-
-      renderRecordList();
-    };
-
-    document
-      .querySelectorAll(".tab-button")
-      .forEach(button => {
-        button.addEventListener(
-          "click",
-          () => {
-            document
-              .querySelectorAll(
-                ".tab-button, .tab-panel"
-              )
-              .forEach(element => {
-                element.classList.remove("active");
-              });
-
-            button.classList.add("active");
-
-            document
-              .getElementById(button.dataset.tab)
-              .classList.add("active");
-          }
-        );
+    document.querySelectorAll(".tab-button").forEach(button => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll(".tab-button, .tab-panel").forEach(x => x.classList.remove("active"));
+        button.classList.add("active");
+        document.getElementById(button.dataset.tab).classList.add("active");
       });
+    });
 
-    document
-      .getElementById("surgeryDate")
-      .addEventListener(
-        "change",
-        updatePostopDayDisplay
-      );
+    document.getElementById("surgeryDate").addEventListener("change", updatePostopDay);
+    document.getElementById("recordDate").addEventListener("change", updatePostopDay);
+    document.getElementById("summaryButton").addEventListener("click", showSummary);
+    document.getElementById("aiButton").addEventListener("click", showAiComment);
+    document.getElementById("saveButton").addEventListener("click", saveRecord);
+    document.getElementById("exportButton").addEventListener("click", exportData);
+    document.getElementById("clearButton").addEventListener("click", () => {
+      if (!confirm("保存済み記録をすべて削除しますか？")) return;
+      records = [];
+      saveRecords();
+      renderRecords();
+    });
 
-    document
-      .getElementById("evaluateButton")
-      .addEventListener(
-        "click",
-        evaluatePatientInput
-      );
-
-    document
-      .getElementById("saveRecordButton")
-      .addEventListener(
-        "click",
-        saveCurrentRecord
-      );
-
-    document
-      .getElementById("surgeryForm")
-      .addEventListener(
-        "submit",
-        event => {
-          event.preventDefault();
-
-          const name =
-            document
-              .getElementById("newSurgeryName")
-              .value
-              .trim();
-
-          const description =
-            document
-              .getElementById(
-                "newSurgeryDescription"
-              )
-              .value
-              .trim();
-
-          if (!name) {
-            return;
-          }
-
-          surgeries.push({
-            id: createId(),
-            name,
-            description
-          });
-
-          saveToStorage(
-            STORAGE_KEYS.surgeries,
-            surgeries
-          );
-
-          event.target.reset();
-
-          renderSurgeryOptions();
-          renderSurgeryList();
-        }
-      );
-
-    document
-      .getElementById("ruleForm")
-      .addEventListener(
-        "submit",
-        event => {
-          event.preventDefault();
-
-          const rule = {
-            id: createId(),
-            name:
-              document
-                .getElementById("ruleName")
-                .value
-                .trim(),
-            surgeryId:
-              document
-                .getElementById(
-                  "ruleSurgerySelect"
-                )
-                .value,
-            dayFrom:
-              Number(
-                document.getElementById(
-                  "ruleDayFrom"
-                ).value
-              ),
-            dayTo:
-              Number(
-                document.getElementById(
-                  "ruleDayTo"
-                ).value
-              ),
-            field:
-              document.getElementById(
-                "ruleField"
-              ).value,
-            operator:
-              document.getElementById(
-                "ruleOperator"
-              ).value,
-            threshold:
-              Number(
-                document.getElementById(
-                  "ruleThreshold"
-                ).value
-              ),
-            severity:
-              document.getElementById(
-                "ruleSeverity"
-              ).value,
-            message:
-              document
-                .getElementById("ruleMessage")
-                .value
-                .trim(),
-            clinicianNote:
-              document
-                .getElementById(
-                  "ruleClinicianNote"
-                )
-                .value
-                .trim()
-          };
-
-          if (!rule.name || !rule.message) {
-            alert(
-              "ルール名と患者への案内文を入力してください。"
-            );
-
-            return;
-          }
-
-          if (rule.dayFrom > rule.dayTo) {
-            alert(
-              "術後日数の開始日は終了日以下にしてください。"
-            );
-
-            return;
-          }
-
-          rules.push(rule);
-
-          saveToStorage(
-            STORAGE_KEYS.rules,
-            rules
-          );
-
-          event.target.reset();
-
-          document.getElementById(
-            "ruleDayFrom"
-          ).value = 0;
-
-          document.getElementById(
-            "ruleDayTo"
-          ).value = 3650;
-
-          document.getElementById(
-            "ruleThreshold"
-          ).value = 1;
-
-          renderRuleList();
-        }
-      );
-
-    document
-      .getElementById("resetRuleButton")
-      .addEventListener(
-        "click",
-        () => {
-          const confirmed =
-            window.confirm(
-              "対応ルールを初期状態に戻しますか？"
-            );
-
-          if (!confirmed) {
-            return;
-          }
-
-          rules = cloneData(defaultRules);
-
-          saveToStorage(
-            STORAGE_KEYS.rules,
-            rules
-          );
-
-          renderRuleList();
-        }
-      );
-
-    document
-      .getElementById("clearRecordButton")
-      .addEventListener(
-        "click",
-        () => {
-          const confirmed =
-            window.confirm(
-              "保存済みの記録をすべて削除しますか？"
-            );
-
-          if (!confirmed) {
-            return;
-          }
-
-          records = [];
-
-          saveToStorage(
-            STORAGE_KEYS.records,
-            records
-          );
-
-          renderRecordList();
-        }
-      );
-
-    document
-      .getElementById("exportButton")
-      .addEventListener(
-        "click",
-        exportData
-      );
-
-    renderSurgeryOptions();
-    renderSurgeryList();
-    renderRuleList();
-    renderRecordList();
-    updatePostopDayDisplay();
+    setToday();
+    updatePostopDay();
+    renderRecords();
   </script>
 </body>
 </html>
