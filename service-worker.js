@@ -1,9 +1,9 @@
 // LARS PWA v1.9 — static app shell only. Patient data remain in browser localStorage.
-const CACHE_NAME = 'lars-shell-v1.9.0';
+const CACHE_NAME = 'lars-shell-v1.9.1';
 const SHELL = [
   './', './index.html', './manifest.webmanifest', './pwa.js',
-  './icons/icon-192.png', './icons/icon-512.png',
-  './icons/maskable-512.png', './icons/apple-touch-icon.png'
+  './icon-192.png', './icon-512.png',
+  './maskable-512.png', './apple-touch-icon.png'
 ];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(SHELL)));
